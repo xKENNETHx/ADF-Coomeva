@@ -1,0 +1,753 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nombre de instancia de Data Factory"
+		},
+		"cxStorage": {
+			"type": "string"
+		},
+		"UBAS": {
+			"type": "string"
+		},
+		"Azure_gi_bodega01": {
+			"type": "string"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/amb_bdg_clienteSn')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Consulta en el Sinet los datos de la tabla ips_cliente_sn",
+				"activities": [
+					{
+						"name": "cargaClienteSN",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "OracleSource",
+								"oracleReaderQuery": "SELECT \n1 codOrigenDato,\n'CORE_SINERGIA' desOrigenDato,\nCL.COD_CLIENTE codCliente,\nCL.COD_TIPO_IDENTI codTipoIdentificacionCliente,\nTI.ABR_IDENTIFICACION abrTipoIdentificacionCliente,\nCL.NRO_IDENTI_USUARI numIdentificacionCliente,\nCL.COD_TIPO_CLIENTE codTipoCliente,\nTC.DES_TIPO_CLIENTE desTipoCliente,\nCL.COD_TIPO_PERSONA codTipoPersona,\nTP.DES_TIPO_PERSONA desTipoPersona,\nCL.NM1_PERSONA_NATURAL nom1PersonaNatural,\nCL.NM2_PERSONA_NATURAL nom2PersonaNatural,\nCL.AP1_PERSONA_NATURAL ape1PersonaNatural,\nCL.AP2_PERSONA_NATURAL ape2PersonaNatural,\nCL.NOM_RAZON_SOCIAL nomRazonSocial,\nCL.COD_NATURA_JURIDI codNaturalezaJuridica,\nNJ.DES_NATURA_JURIDI desNaturalezaJuridica,\nCL.NOM_REPRESENTANTE_LEGAL nomRepresentanteLegal,\nCL.EMAIL_REPRE_LEGAL emailRepresentanteLegal,\nCL.TEL_CELULAR_CLIENTE celularRepresentanteLegal,\nCL.COD_CIUDAD codCiudad,\nCI.NOM_CIUDAD desCiudad,\nCL.DIR_CLIENTE direcionCliente,\nCL.TEL_CLIENTE telefonoCliente,\nCL.EMAIL_CLIENTE emailCliente,\nCL.DES_ESTABLE_COMERCIAL descEstablecimientoComercial,\nCL.IND_GRAN_CONTRIBUYENTE indGranContribuyente,\nCL.COD_ESTADO_CLIENTE codEstadoCliente,\nEC.DES_ESTADO_CLIENTE desEstadoCliente,\nCL.FEC_CREACION fecCreacion,\nCL.FEC_ACTUALIZA fecActualiza,\nCL.PORCENT_IMPUESTO porcentajeImpuesto,\nCL.OBS_PORCENT_IMPUESTO obsPorcentajeImpuesto,\nCL.IND_REPO4505 indReporte4505,\nCL.COD_OPCION_REPO codOpcionReporte,\nCL.COD_ENTIDAD_MA codEntidadMatis,\nCL.COD_ENTIDAD_202 codEntidadNorma202\nFROM IPS_CLIENTE_SN CL,\nIPS_TIPO_IDENTIFICACION TI, \nIPS.IPS_P_TIPO_CLIENTE_SN TC,\nIPS.IPS_P_TIPO_PERSONA TP,\nIPS_NATURALEZA_JURIDICA NJ,\nIPS_CIUDAD CI,\nIPS.IPS_P_ESTADO_CLIENTE_SN EC\nWHERE \nCL.COD_TIPO_IDENTI = TI.COD_TIPO_IDENTI\nAND CL.COD_TIPO_CLIENTE = TC.COD_TIPO_CLIENTE\nAND CL.COD_TIPO_PERSONA = TP.COD_TIPO_PERSONA\nAND CL.COD_NATURA_JURIDI = NJ.COD_NATURA_JURIDI(+)\nAND CL.COD_CIUDAD = CI.COD_CIUDAD\nAND CL.COD_ESTADO_CLIENTE = EC.COD_ESTADO_CLIENTE(+)\nAND CL.FEC_CREACION >= TO_DATE('01/01/2016','DD/MM/YYYY')",
+								"partitionOption": "None",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"preCopyScript": "TRUNCATE TABLE amb_bdg_clienteSn",
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": false
+								},
+								"disableMetricsCollection": false
+							},
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "[parameters('cxStorage')]",
+									"type": "LinkedServiceReference"
+								},
+								"path": "stage"
+							},
+							"enableSkipIncompatibleRow": true,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "CODORIGENDATO",
+											"type": "Double"
+										},
+										"sink": {
+											"name": "codOrigenDato",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "DESORIGENDATO",
+											"type": "String"
+										},
+										"sink": {
+											"name": "desOrigenDato",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CODCLIENTE",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "codCliente",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CODTIPOIDENTIFICACIONCLIENTE",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "codTipoIdentificacionCliente",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "ABRTIPOIDENTIFICACIONCLIENTE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "abrTipoIdentificacionCliente",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NUMIDENTIFICACIONCLIENTE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "numIdentificacionCliente",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CODTIPOCLIENTE",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "codTipoCliente",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "DESTIPOCLIENTE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "desTipoCliente",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CODTIPOPERSONA",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "codTipoPersona",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "DESTIPOPERSONA",
+											"type": "String"
+										},
+										"sink": {
+											"name": "desTipoPersona",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NOM1PERSONANATURAL",
+											"type": "String"
+										},
+										"sink": {
+											"name": "nom1PersonaNatural",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NOM2PERSONANATURAL",
+											"type": "String"
+										},
+										"sink": {
+											"name": "nom2PersonaNatural",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "APE1PERSONANATURAL",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ape1PersonaNatural",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "APE2PERSONANATURAL",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ape2PersonaNatural",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NOMRAZONSOCIAL",
+											"type": "String"
+										},
+										"sink": {
+											"name": "nomRazonSocial",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CODNATURALEZAJURIDICA",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "codNaturalezaJuridica",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "DESNATURALEZAJURIDICA",
+											"type": "String"
+										},
+										"sink": {
+											"name": "desNaturalezaJuridica",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NOMREPRESENTANTELEGAL",
+											"type": "String"
+										},
+										"sink": {
+											"name": "nomRepresentanteLegal",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EMAILREPRESENTANTELEGAL",
+											"type": "String"
+										},
+										"sink": {
+											"name": "emailRepresentanteLegal",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CELULARREPRESENTANTELEGAL",
+											"type": "String"
+										},
+										"sink": {
+											"name": "celularRepresentanteLegal",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CODCIUDAD",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "codCiudad",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "DESCIUDAD",
+											"type": "String"
+										},
+										"sink": {
+											"name": "desCiudad",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DIRECIONCLIENTE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "direcionCliente",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TELEFONOCLIENTE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "telefonoCliente",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EMAILCLIENTE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "emailCliente",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DESCESTABLECIMIENTOCOMERCIAL",
+											"type": "String"
+										},
+										"sink": {
+											"name": "descEstablecimientoComercial",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "INDGRANCONTRIBUYENTE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "indGranContribuyente",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CODESTADOCLIENTE",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "codEstadoCliente",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "DESESTADOCLIENTE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "desEstadoCliente",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FECCREACION",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "fecCreacion",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "FECACTUALIZA",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "fecActualiza",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "PORCENTAJEIMPUESTO",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "porcentajeImpuesto",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "OBSPORCENTAJEIMPUESTO",
+											"type": "String"
+										},
+										"sink": {
+											"name": "obsPorcentajeImpuesto",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "INDREPORTE4505",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "indReporte4505",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "CODOPCIONREPORTE",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "codOpcionReporte",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CODENTIDADMATIS",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "codEntidadMatis",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CODENTIDADNORMA202",
+											"type": "String"
+										},
+										"sink": {
+											"name": "codEntidadNorma202",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dt_amb_bdg_clienteSn",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "cargaClienteSN",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "actualizarBitacora",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "cargaClienteSN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "  UPDATE bitacoraProcesos\n        SET bitacoraProcesos.fechaActualizacion = DATEADD(HOUR,-5, GETDATE())\n WHERE bitacoraProcesos.proceso = 'amb_bdg_clienteSn'\n\nSELECT 1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "actualizarB_clienteSN",
+								"type": "DatasetReference"
+							}
+						}
+					}
+				],
+				"annotations": [],
+				"lastPublishTime": "2023-05-16T17:47:12Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dt_amb_bdg_clienteSn')]",
+				"[concat(variables('factoryId'), '/datasets/cargaClienteSN')]",
+				"[concat(variables('factoryId'), '/datasets/actualizarB_clienteSN')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dt_amb_bdg_clienteSn')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('UBAS')]",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "OracleTable",
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/cargaClienteSN')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('Azure_gi_bodega01')]",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "codOrigenDato",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "desOrigenDato",
+						"type": "nvarchar"
+					},
+					{
+						"name": "codCliente",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "codTipoIdentificacionCliente",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "abrTipoIdentificacionCliente",
+						"type": "nvarchar"
+					},
+					{
+						"name": "numIdentificacionCliente",
+						"type": "nvarchar"
+					},
+					{
+						"name": "codTipoCliente",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "desTipoCliente",
+						"type": "nvarchar"
+					},
+					{
+						"name": "codTipoPersona",
+						"type": "decimal",
+						"precision": 8,
+						"scale": 0
+					},
+					{
+						"name": "desTipoPersona",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nom1PersonaNatural",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nom2PersonaNatural",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ape1PersonaNatural",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ape2PersonaNatural",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nomRazonSocial",
+						"type": "nvarchar"
+					},
+					{
+						"name": "codNaturalezaJuridica",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "desNaturalezaJuridica",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nomRepresentanteLegal",
+						"type": "nvarchar"
+					},
+					{
+						"name": "emailRepresentanteLegal",
+						"type": "nvarchar"
+					},
+					{
+						"name": "celularRepresentanteLegal",
+						"type": "nvarchar"
+					},
+					{
+						"name": "codCiudad",
+						"type": "decimal",
+						"precision": 5,
+						"scale": 0
+					},
+					{
+						"name": "desCiudad",
+						"type": "nvarchar"
+					},
+					{
+						"name": "direcionCliente",
+						"type": "nvarchar"
+					},
+					{
+						"name": "telefonoCliente",
+						"type": "nvarchar"
+					},
+					{
+						"name": "emailCliente",
+						"type": "nvarchar"
+					},
+					{
+						"name": "descEstablecimientoComercial",
+						"type": "nvarchar"
+					},
+					{
+						"name": "indGranContribuyente",
+						"type": "nvarchar"
+					},
+					{
+						"name": "codEstadoCliente",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "desEstadoCliente",
+						"type": "nvarchar"
+					},
+					{
+						"name": "fecCreacion",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "fecActualiza",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "porcentajeImpuesto",
+						"type": "decimal",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "obsPorcentajeImpuesto",
+						"type": "nvarchar"
+					},
+					{
+						"name": "indReporte4505",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "codOpcionReporte",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "codEntidadMatis",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "codEntidadNorma202",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "amb_bdg_clienteSn"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/actualizarB_clienteSN')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('Azure_gi_bodega01')]",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "codProceso",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "proceso",
+						"type": "varchar"
+					},
+					{
+						"name": "fechaActualizacion",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "valor",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "fechaActualizacionStage",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "bitacoraProcesos"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
