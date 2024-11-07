@@ -1,0 +1,9 @@
+{
+	"name": "gi-coomeva",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "43d8d2b1-07dd-4eb8-a349-8ae658765210",
+		"tenantId": "b10485fe-8837-4161-95b7-2537eca1d86a"
+	}
+}
