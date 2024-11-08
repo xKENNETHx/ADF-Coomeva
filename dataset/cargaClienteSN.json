@@ -1,0 +1,188 @@
+{
+	"name": "cargaClienteSN",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DTW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "codOrigenDato",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "desOrigenDato",
+				"type": "nvarchar"
+			},
+			{
+				"name": "codCliente",
+				"type": "decimal",
+				"precision": 13,
+				"scale": 0
+			},
+			{
+				"name": "codTipoIdentificacionCliente",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "abrTipoIdentificacionCliente",
+				"type": "nvarchar"
+			},
+			{
+				"name": "numIdentificacionCliente",
+				"type": "nvarchar"
+			},
+			{
+				"name": "codTipoCliente",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "desTipoCliente",
+				"type": "nvarchar"
+			},
+			{
+				"name": "codTipoPersona",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "desTipoPersona",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nom1PersonaNatural",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nom2PersonaNatural",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ape1PersonaNatural",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ape2PersonaNatural",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nomRazonSocial",
+				"type": "nvarchar"
+			},
+			{
+				"name": "codNaturalezaJuridica",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "desNaturalezaJuridica",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nomRepresentanteLegal",
+				"type": "nvarchar"
+			},
+			{
+				"name": "emailRepresentanteLegal",
+				"type": "nvarchar"
+			},
+			{
+				"name": "celularRepresentanteLegal",
+				"type": "nvarchar"
+			},
+			{
+				"name": "codCiudad",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "desCiudad",
+				"type": "nvarchar"
+			},
+			{
+				"name": "direcionCliente",
+				"type": "nvarchar"
+			},
+			{
+				"name": "telefonoCliente",
+				"type": "nvarchar"
+			},
+			{
+				"name": "emailCliente",
+				"type": "nvarchar"
+			},
+			{
+				"name": "descEstablecimientoComercial",
+				"type": "nvarchar"
+			},
+			{
+				"name": "indGranContribuyente",
+				"type": "nvarchar"
+			},
+			{
+				"name": "codEstadoCliente",
+				"type": "decimal",
+				"precision": 13,
+				"scale": 0
+			},
+			{
+				"name": "desEstadoCliente",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fecCreacion",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "fecActualiza",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "porcentajeImpuesto",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "obsPorcentajeImpuesto",
+				"type": "nvarchar"
+			},
+			{
+				"name": "indReporte4505",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "codOpcionReporte",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "codEntidadMatis",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "codEntidadNorma202",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "amb_bdg_clienteSn"
+		}
+	}
+}

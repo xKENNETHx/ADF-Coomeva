@@ -1,0 +1,43 @@
+{
+	"name": "actualizarB_clienteSN",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DTW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "codProceso",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "proceso",
+				"type": "varchar"
+			},
+			{
+				"name": "fechaActualizacion",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "valor",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "fechaActualizacionStage",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "bitacoraProcesos"
+		}
+	}
+}
