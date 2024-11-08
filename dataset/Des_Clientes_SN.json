@@ -1,0 +1,99 @@
+{
+	"name": "Des_Clientes_SN",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DTW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "codCliente",
+				"type": "decimal",
+				"precision": 13,
+				"scale": 0
+			},
+			{
+				"name": "razonSocial",
+				"type": "varchar"
+			},
+			{
+				"name": "desComercial",
+				"type": "varchar"
+			},
+			{
+				"name": "representanteLegal",
+				"type": "varchar"
+			},
+			{
+				"name": "codigoTipoIdenti",
+				"type": "decimal",
+				"precision": 3,
+				"scale": 0
+			},
+			{
+				"name": "desTipoIdenti",
+				"type": "varchar"
+			},
+			{
+				"name": "ABR",
+				"type": "varchar"
+			},
+			{
+				"name": "nroIdentiUsuario",
+				"type": "varchar"
+			},
+			{
+				"name": "codTipoCliente",
+				"type": "decimal",
+				"precision": 3,
+				"scale": 0
+			},
+			{
+				"name": "desTipoCliente",
+				"type": "varchar"
+			},
+			{
+				"name": "indActivo",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "codTipoPersona",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "desTipoPersona",
+				"type": "varchar"
+			},
+			{
+				"name": "indActivoSN",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "codEstadoCliente",
+				"type": "decimal",
+				"precision": 13,
+				"scale": 0
+			},
+			{
+				"name": "desEstadoCliente",
+				"type": "varchar"
+			},
+			{
+				"name": "fecActualizacion",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "produ_bdg_ClientesSN"
+		}
+	}
+}

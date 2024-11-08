@@ -1,0 +1,230 @@
+{
+	"name": "produ_bdg_Clientes_SN",
+	"properties": {
+		"activities": [
+			{
+				"name": "Carga_Clientes_SN",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OracleSource",
+						"oracleReaderQuery": "SELECT \t\t\t cli.COD_CLIENTE AS codCliente \r\n\t\t\t\t,cli.NOM_RAZON_SOCIAL AS razonSocial\r\n\t\t\t\t,cli.DES_ESTABLE_COMERCIAL AS desComercial\r\n\t\t\t\t,cli.NOM_REPRESENTANTE_LEGAL AS representanteLegal\r\n\t\t\t\t,cli.COD_TIPO_IDENTI AS codigoTipoIdenti\r\n\t\t\t\t,tip_iden.DES_IDENTIFICACION AS desTipoIdenti\r\n\t\t\t\t,tip_iden.ABR_IDENTIFICACION AS ABR\r\n\t\t\t\t,cli.NRO_IDENTI_USUARI AS nroIdentiUsuario\r\n\t\t\t\t,cli.COD_TIPO_CLIENTE AS codTipoCliente\r\n\t\t\t\t,tip_cli.DES_TIPO_CLIENTE AS desTipoCliente\r\n\t\t\t\t,tip_cli.IND_ACTIVO AS indActivo\r\n\t\t\t\t,cli.COD_TIPO_PERSONA AS codTipoPersona\r\n\t\t\t\t,tip_pers.DES_TIPO_PERSONA AS desTipoPersona\r\n\t\t\t\t,tip_pers.IND_ACTIVO_SN AS indActivoSN\r\n\t\t\t\t,cli.COD_ESTADO_CLIENTE AS codEstadoCliente\r\n\t\t\t\t,est_cli.DES_ESTADO_CLIENTE AS desEstadoCliente\r\n\t\t\t\t,TO_CHAR(SYSDATE,'yyyy-mm-dd') AS fecActualizacion\r\nFROM \t\t\tIPS.IPS_CLIENTE_SN cli\r\nINNER JOIN \t\tIPS.IPS_TIPO_IDENTIFICACION tip_iden ON tip_iden.COD_TIPO_IDENTI = cli.COD_TIPO_IDENTI \r\nINNER JOIN \t\tIPS.IPS_P_TIPO_CLIENTE_SN tip_cli ON tip_cli.COD_TIPO_CLIENTE = cli.COD_TIPO_CLIENTE  \r\nINNER JOIN \t\tIPS.IPS_P_TIPO_PERSONA tip_pers ON tip_pers.COD_TIPO_PERSONA = cli.COD_TIPO_PERSONA \r\nINNER JOIN \t\tIPS.IPS_P_ESTADO_CLIENTE_SN est_cli ON est_cli.COD_ESTADO_CLIENTE = cli.COD_ESTADO_CLIENTE\r\nWHERE\t\t\tcli.COD_ESTADO_CLIENTE = 1\r\nAND\t\t\t\tcli.IND_REPO4505 = 1\r\n--AND\t\t\t\tcli.COD_ENTIDAD_202 IS NOT NULL\r\nAND\t\t\t\tcli.COD_OPCION_REPO = 1\r\nORDER BY\t\tcli.COD_CLIENTE ASC",
+						"partitionOption": "None",
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"preCopyScript": "TRUNCATE TABLE produ_bdg_ClientesSN;\n\n",
+						"writeBehavior": "Insert",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CODCLIENTE",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "codCliente",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "RAZONSOCIAL",
+									"type": "String"
+								},
+								"sink": {
+									"name": "razonSocial",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DESCOMERCIAL",
+									"type": "String"
+								},
+								"sink": {
+									"name": "desComercial",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "REPRESENTANTELEGAL",
+									"type": "String"
+								},
+								"sink": {
+									"name": "representanteLegal",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CODIGOTIPOIDENTI",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "codigoTipoIdenti",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "DESTIPOIDENTI",
+									"type": "String"
+								},
+								"sink": {
+									"name": "desTipoIdenti",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ABR",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ABR",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NROIDENTIUSUARIO",
+									"type": "String"
+								},
+								"sink": {
+									"name": "nroIdentiUsuario",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CODTIPOCLIENTE",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "codTipoCliente",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "DESTIPOCLIENTE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "desTipoCliente",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "INDACTIVO",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "indActivo",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "CODTIPOPERSONA",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "codTipoPersona",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "DESTIPOPERSONA",
+									"type": "String"
+								},
+								"sink": {
+									"name": "desTipoPersona",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "INDACTIVOSN",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "indActivoSN",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "CODESTADOCLIENTE",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "codEstadoCliente",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "DESESTADOCLIENTE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "desEstadoCliente",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FECACTUALIZACION",
+									"type": "String"
+								},
+								"sink": {
+									"name": "fecActualizacion",
+									"type": "DateTime"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Ori_Clientes_SN",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Des_Clientes_SN",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-09-21T15:06:30Z"
+	}
+}
